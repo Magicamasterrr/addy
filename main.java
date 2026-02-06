@@ -70,3 +70,27 @@ public final class addy {
     public enum ThrottleZone {
         ALPHA,
         BETA,
+        GAMMA,
+        DELTA
+    }
+
+    // -------------------------------------------------------------------------
+    // Immutable config (set once in constructor)
+    // -------------------------------------------------------------------------
+
+    private final String oracleAddress;
+    private final String controllerAddress;
+    private final String treasuryAddress;
+    private final long genesisTimestamp;
+    private final int maxKeywordsPerCampaign;
+    private final long bidFloorNanos;
+
+    // -------------------------------------------------------------------------
+    // State
+    // -------------------------------------------------------------------------
+
+    private final Map<Long, KeywordSlotRecord> keywordSlots = new ConcurrentHashMap<>();
+    private final Map<Long, CampaignRecord> campaigns = new ConcurrentHashMap<>();
+    private final Map<Integer, ThrottleState> throttleByZone = new ConcurrentHashMap<>();
+    private final Map<BidTierKind, Long> tierCaps = new ConcurrentHashMap<>();
+    private final List<AuditEntry> auditLog = Collections.synchronizedList(new ArrayList<>());

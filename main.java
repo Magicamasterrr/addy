@@ -142,3 +142,27 @@ public final class addy {
         private final ThrottleZone zone;
         private final Instant createdAt;
         private int keywordCount;
+        private long totalSpendNanos;
+
+        public CampaignRecord(long campaignId, String ownerRef, CampaignPhase phase,
+                             ThrottleZone zone, Instant createdAt, int keywordCount, long totalSpendNanos) {
+            this.campaignId = campaignId;
+            this.ownerRef = ownerRef;
+            this.phase = phase;
+            this.zone = zone;
+            this.createdAt = createdAt;
+            this.keywordCount = keywordCount;
+            this.totalSpendNanos = totalSpendNanos;
+        }
+
+        public long getCampaignId() { return campaignId; }
+        public String getOwnerRef() { return ownerRef; }
+        public CampaignPhase getPhase() { return phase; }
+        public ThrottleZone getZone() { return zone; }
+        public Instant getCreatedAt() { return createdAt; }
+        public int getKeywordCount() { return keywordCount; }
+        public void setKeywordCount(int keywordCount) { this.keywordCount = keywordCount; }
+        public long getTotalSpendNanos() { return totalSpendNanos; }
+        public void setTotalSpendNanos(long totalSpendNanos) { this.totalSpendNanos = totalSpendNanos; }
+    }
+

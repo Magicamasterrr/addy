@@ -94,3 +94,27 @@ public final class addy {
     private final Map<Integer, ThrottleState> throttleByZone = new ConcurrentHashMap<>();
     private final Map<BidTierKind, Long> tierCaps = new ConcurrentHashMap<>();
     private final List<AuditEntry> auditLog = Collections.synchronizedList(new ArrayList<>());
+    private final Set<String> registeredKeywordHashes = ConcurrentHashMap.newKeySet();
+    private final Map<Long, Long> lastBidTimeByCampaign = new ConcurrentHashMap<>();
+    private final AtomicLong nextKeywordId = new AtomicLong(1L);
+    private final AtomicLong nextCampaignId = new AtomicLong(1L);
+    private int totalBidsPlaced;
+    private int totalCampaignsActivated;
+
+    // -------------------------------------------------------------------------
+    // Inner records (unique naming)
+    // -------------------------------------------------------------------------
+
+    public static final class KeywordSlotRecord {
+        private final long slotId;
+        private final String keywordHash;
+        private final long campaignId;
+        private final BidTierKind tier;
+        private final long cpcNanos;
+        private final Instant createdAt;
+        private boolean active;
+
+        public KeywordSlotRecord(long slotId, String keywordHash, long campaignId,
+                                 BidTierKind tier, long cpcNanos, Instant createdAt, boolean active) {
+            this.slotId = slotId;
+            this.keywordHash = keywordHash;

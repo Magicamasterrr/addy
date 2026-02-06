@@ -310,3 +310,27 @@ public final class addy {
         long now = System.currentTimeMillis();
         if (now - state.getLastActionAt() >= THROTTLE_WINDOW_MS) {
             state.setActionsInWindow(0);
+            state.setLastActionAt(now);
+        }
+        state.setActionsInWindow(state.getActionsInWindow() + 1);
+    }
+
+    // -------------------------------------------------------------------------
+    // Campaign lifecycle
+    // -------------------------------------------------------------------------
+
+    public long createCampaign(String ownerRef, ThrottleZone zone) {
+        if (ownerRef == null || ownerRef.isBlank()) {
+            throw new IllegalArgumentException("addy: owner ref blank");
+        }
+        if (!canPerformInZone(zone)) {
+            throw new IllegalStateException("addy: throttle limit exceeded for zone " + zone);
+        }
+        long id = nextCampaignId.getAndIncrement();
+        CampaignRecord rec = new CampaignRecord(id, ownerRef, CampaignPhase.DRAFT, zone,
+                Instant.now(), 0, 0L);
+        campaigns.put(id, rec);
+        consumeThrottle(zone);
+        appendAudit("CAMPAIGN_CREATE", id, "owner=" + ownerRef + ",zone=" + zone);
+        return id;
+    }

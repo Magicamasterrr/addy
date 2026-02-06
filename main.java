@@ -238,3 +238,27 @@ public final class addy {
      * Default constructor using built-in constants (for tests or single-node use).
      * All addresses and caps are populated; no placeholders.
      */
+    public addy() {
+        this(ORACLE_HEX, CONTROLLER_HEX, TREASURY_HEX, 127, 1_847_293_651L);
+    }
+
+    private void initThrottleZones() {
+        for (ThrottleZone z : ThrottleZone.values()) {
+            throttleByZone.put(z.ordinal(), new ThrottleState(z, 0L, 0));
+        }
+    }
+
+    private void initTierCaps() {
+        tierCaps.put(BidTierKind.ZERO, 0L);
+        tierCaps.put(BidTierKind.LOW, 10_000_000L);
+        tierCaps.put(BidTierKind.MID, 50_000_000L);
+        tierCaps.put(BidTierKind.HIGH, 200_000_000L);
+        tierCaps.put(BidTierKind.PREMIUM, 800_000_000L);
+        tierCaps.put(BidTierKind.ULTRA, 2_000_000_000L);
+    }
+
+    // -------------------------------------------------------------------------
+    // Getters for immutable config
+    // -------------------------------------------------------------------------
+
+    public String getOracleAddress() { return oracleAddress; }

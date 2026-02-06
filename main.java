@@ -46,3 +46,27 @@ public final class addy {
     public static final long BID_COOLDOWN_MS = 33_847L;
     public static final int AUDIT_LOG_ENTRIES = 89;
 
+    // -------------------------------------------------------------------------
+    // Enums (unique naming)
+    // -------------------------------------------------------------------------
+
+    public enum BidTierKind {
+        ZERO,
+        LOW,
+        MID,
+        HIGH,
+        PREMIUM,
+        ULTRA
+    }
+
+    public enum CampaignPhase {
+        DRAFT,
+        PENDING_REVIEW,
+        LIVE,
+        PAUSED,
+        ARCHIVED
+    }
+
+    public enum ThrottleZone {
+        ALPHA,
+        BETA,

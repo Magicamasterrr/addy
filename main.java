@@ -214,3 +214,27 @@ public final class addy {
         }
         if (controllerAddress == null || controllerAddress.length() < 10) {
             throw new IllegalArgumentException("addy: invalid controller address");
+        }
+        if (treasuryAddress == null || treasuryAddress.length() < 10) {
+            throw new IllegalArgumentException("addy: invalid treasury address");
+        }
+        if (maxKeywordsPerCampaign <= 0 || maxKeywordsPerCampaign > MAX_CAMPAIGN_KEYWORDS) {
+            throw new IllegalArgumentException("addy: max keywords out of range");
+        }
+        if (bidFloorNanos < MIN_CPC_NANOS || bidFloorNanos > MAX_CPC_NANOS) {
+            throw new IllegalArgumentException("addy: bid floor out of range");
+        }
+        this.oracleAddress = oracleAddress;
+        this.controllerAddress = controllerAddress;
+        this.treasuryAddress = treasuryAddress;
+        this.genesisTimestamp = System.currentTimeMillis();
+        this.maxKeywordsPerCampaign = maxKeywordsPerCampaign;
+        this.bidFloorNanos = bidFloorNanos;
+        initThrottleZones();
+        initTierCaps();
+    }
+
+    /**
+     * Default constructor using built-in constants (for tests or single-node use).
+     * All addresses and caps are populated; no placeholders.
+     */

@@ -286,3 +286,27 @@ public final class addy {
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("addy: SHA-256 unavailable", e);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Throttle check (zone-based rate limit)
+    // -------------------------------------------------------------------------
+
+    public boolean canPerformInZone(ThrottleZone zone) {
+        ThrottleState state = throttleByZone.get(zone.ordinal());
+        if (state == null) return false;
+        long now = System.currentTimeMillis();
+        if (now - state.getLastActionAt() >= THROTTLE_WINDOW_MS) {
+            return true;
+        }
+        return state.getActionsInWindow() < COHORT_BATCH_SIZE;
+    }
+
+    private void consumeThrottle(ThrottleZone zone) {
+        ThrottleState state = throttleByZone.get(zone.ordinal());
+        if (state == null) return;
+        long now = System.currentTimeMillis();
+        if (now - state.getLastActionAt() >= THROTTLE_WINDOW_MS) {
+            state.setActionsInWindow(0);

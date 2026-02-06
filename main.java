@@ -166,3 +166,27 @@ public final class addy {
         public void setTotalSpendNanos(long totalSpendNanos) { this.totalSpendNanos = totalSpendNanos; }
     }
 
+    public static final class ThrottleState {
+        private final ThrottleZone zone;
+        private long lastActionAt;
+        private int actionsInWindow;
+
+        public ThrottleState(ThrottleZone zone, long lastActionAt, int actionsInWindow) {
+            this.zone = zone;
+            this.lastActionAt = lastActionAt;
+            this.actionsInWindow = actionsInWindow;
+        }
+
+        public ThrottleZone getZone() { return zone; }
+        public long getLastActionAt() { return lastActionAt; }
+        public void setLastActionAt(long lastActionAt) { this.lastActionAt = lastActionAt; }
+        public int getActionsInWindow() { return actionsInWindow; }
+        public void setActionsInWindow(int actionsInWindow) { this.actionsInWindow = actionsInWindow; }
+    }
+
+    public static final class AuditEntry {
+        private final long timestamp;
+        private final String actionCode;
+        private final long subjectId;
+        private final String detail;
+

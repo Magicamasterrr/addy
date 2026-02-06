@@ -190,3 +190,27 @@ public final class addy {
         private final long subjectId;
         private final String detail;
 
+        public AuditEntry(long timestamp, String actionCode, long subjectId, String detail) {
+            this.timestamp = timestamp;
+            this.actionCode = actionCode;
+            this.subjectId = subjectId;
+            this.detail = detail;
+        }
+
+        public long getTimestamp() { return timestamp; }
+        public String getActionCode() { return actionCode; }
+        public long getSubjectId() { return subjectId; }
+        public String getDetail() { return detail; }
+    }
+
+    // -------------------------------------------------------------------------
+    // Constructor — authority addresses and caps passed in; no derivation
+    // -------------------------------------------------------------------------
+
+    public addy(String oracleAddress, String controllerAddress, String treasuryAddress,
+                int maxKeywordsPerCampaign, long bidFloorNanos) {
+        if (oracleAddress == null || oracleAddress.length() < 10) {
+            throw new IllegalArgumentException("addy: invalid oracle address");
+        }
+        if (controllerAddress == null || controllerAddress.length() < 10) {
+            throw new IllegalArgumentException("addy: invalid controller address");

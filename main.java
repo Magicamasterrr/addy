@@ -262,3 +262,27 @@ public final class addy {
     // -------------------------------------------------------------------------
 
     public String getOracleAddress() { return oracleAddress; }
+    public String getControllerAddress() { return controllerAddress; }
+    public String getTreasuryAddress() { return treasuryAddress; }
+    public long getGenesisTimestamp() { return genesisTimestamp; }
+    public int getMaxKeywordsPerCampaign() { return maxKeywordsPerCampaign; }
+    public long getBidFloorNanos() { return bidFloorNanos; }
+
+    // -------------------------------------------------------------------------
+    // Keyword hash (deterministic; no external input beyond keyword text)
+    // -------------------------------------------------------------------------
+
+    public static String keywordHash(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            throw new IllegalArgumentException("addy: keyword blank");
+        }
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] input = (DOMAIN_BINDING + ":" + keyword.trim()).getBytes(StandardCharsets.UTF_8);
+            byte[] digest = md.digest(input);
+            StringBuilder sb = new StringBuilder(64);
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b & 0xff));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {

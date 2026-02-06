@@ -118,3 +118,27 @@ public final class addy {
                                  BidTierKind tier, long cpcNanos, Instant createdAt, boolean active) {
             this.slotId = slotId;
             this.keywordHash = keywordHash;
+            this.campaignId = campaignId;
+            this.tier = tier;
+            this.cpcNanos = cpcNanos;
+            this.createdAt = createdAt;
+            this.active = active;
+        }
+
+        public long getSlotId() { return slotId; }
+        public String getKeywordHash() { return keywordHash; }
+        public long getCampaignId() { return campaignId; }
+        public BidTierKind getTier() { return tier; }
+        public long getCpcNanos() { return cpcNanos; }
+        public Instant getCreatedAt() { return createdAt; }
+        public boolean isActive() { return active; }
+        public void setActive(boolean active) { this.active = active; }
+    }
+
+    public static final class CampaignRecord {
+        private final long campaignId;
+        private final String ownerRef;
+        private final CampaignPhase phase;
+        private final ThrottleZone zone;
+        private final Instant createdAt;
+        private int keywordCount;

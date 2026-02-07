@@ -382,3 +382,27 @@ public final class addy {
         long slotId = nextKeywordId.getAndIncrement();
         KeywordSlotRecord slot = new KeywordSlotRecord(slotId, hash, campaignId, tier, cpcNanos,
                 Instant.now(), true);
+        keywordSlots.put(slotId, slot);
+        registeredKeywordHashes.add(hash);
+        camp.setKeywordCount(camp.getKeywordCount() + 1);
+        totalBidsPlaced++;
+        appendAudit("SLOT_ALLOC", slotId, "camp=" + campaignId + ",tier=" + tier);
+        return slotId;
+    }
+
+    public void deactivateKeywordSlot(long slotId) {
+        KeywordSlotRecord slot = keywordSlots.get(slotId);
+        if (slot == null) {
+            throw new IllegalArgumentException("addy: slot not found " + slotId);
+        }
+        slot.setActive(false);
+        appendAudit("SLOT_DEACT", slotId, "");
+    }
+
+    // -------------------------------------------------------------------------
+    // Spend recording (simulated; real EVM would move funds)
+    // -------------------------------------------------------------------------
+
+    public void recordSpend(long campaignId, long amountNanos) {
+        if (amountNanos <= 0) {
+            throw new IllegalArgumentException("addy: spend amount must be positive");

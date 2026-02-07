@@ -334,3 +334,27 @@ public final class addy {
         appendAudit("CAMPAIGN_CREATE", id, "owner=" + ownerRef + ",zone=" + zone);
         return id;
     }
+
+    public void transitionCampaignPhase(long campaignId, CampaignPhase toPhase) {
+        CampaignRecord rec = campaigns.get(campaignId);
+        if (rec == null) {
+            throw new IllegalArgumentException("addy: campaign not found " + campaignId);
+        }
+        CampaignPhase from = rec.getPhase();
+        if (from == CampaignPhase.ARCHIVED) {
+            throw new IllegalStateException("addy: cannot transition archived campaign");
+        }
+        if (toPhase == CampaignPhase.LIVE) {
+            totalCampaignsActivated++;
+        }
+        appendAudit("CAMPAIGN_PHASE", campaignId, from + "->" + toPhase);
+    }
+
+    // -------------------------------------------------------------------------
+    // Keyword slot allocation
+    // -------------------------------------------------------------------------
+
+    public long allocateKeywordSlot(String keyword, long campaignId, BidTierKind tier, long cpcNanos) {
+        if (keyword == null || keyword.isBlank()) {
+            throw new IllegalArgumentException("addy: keyword blank");
+        }

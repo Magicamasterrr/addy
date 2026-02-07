@@ -478,3 +478,27 @@ public final class addy {
     // -------------------------------------------------------------------------
 
     public String getDomainBinding() {
+        return DOMAIN_BINDING;
+    }
+
+    public byte getZonalFlag() {
+        return ZONAL_FLAG;
+    }
+
+    public String getBuildTag() {
+        return BUILD_TAG;
+    }
+
+    // -------------------------------------------------------------------------
+    // Bid tier validation and conversion
+    // -------------------------------------------------------------------------
+
+    public static BidTierKind tierFromCpc(long cpcNanos) {
+        if (cpcNanos <= 0) return BidTierKind.ZERO;
+        if (cpcNanos < 20_000_000L) return BidTierKind.LOW;
+        if (cpcNanos < 100_000_000L) return BidTierKind.MID;
+        if (cpcNanos < 400_000_000L) return BidTierKind.HIGH;
+        if (cpcNanos < 1_500_000_000L) return BidTierKind.PREMIUM;
+        return BidTierKind.ULTRA;
+    }
+

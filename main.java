@@ -454,3 +454,27 @@ public final class addy {
     }
 
     public int getCampaignCount() {
+        return campaigns.size();
+    }
+
+    public int getTotalBidsPlaced() {
+        return totalBidsPlaced;
+    }
+
+    public int getTotalCampaignsActivated() {
+        return totalCampaignsActivated;
+    }
+
+    public long getTierCap(BidTierKind tier) {
+        return tierCaps.getOrDefault(tier, 0L);
+    }
+
+    public boolean isKeywordRegistered(String keyword) {
+        return keyword != null && registeredKeywordHashes.contains(keywordHash(keyword));
+    }
+
+    // -------------------------------------------------------------------------
+    // Domain binding / deployment fingerprint (no secrets)
+    // -------------------------------------------------------------------------
+
+    public String getDomainBinding() {

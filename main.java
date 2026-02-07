@@ -406,3 +406,27 @@ public final class addy {
     public void recordSpend(long campaignId, long amountNanos) {
         if (amountNanos <= 0) {
             throw new IllegalArgumentException("addy: spend amount must be positive");
+        }
+        CampaignRecord camp = campaigns.get(campaignId);
+        if (camp == null) {
+            throw new IllegalArgumentException("addy: campaign not found " + campaignId);
+        }
+        camp.setTotalSpendNanos(camp.getTotalSpendNanos() + amountNanos);
+        appendAudit("SPEND", campaignId, "amount=" + amountNanos);
+    }
+
+    // -------------------------------------------------------------------------
+    // Audit log (bounded)
+    // -------------------------------------------------------------------------
+
+    private void appendAudit(String actionCode, long subjectId, String detail) {
+        synchronized (auditLog) {
+            auditLog.add(new AuditEntry(System.currentTimeMillis(), actionCode, subjectId, detail));
+            if (auditLog.size() > AUDIT_LOG_ENTRIES) {
+                auditLog.remove(0);
+            }
+        }
+    }
+
+    public List<AuditEntry> getAuditTail(int maxEntries) {
+        synchronized (auditLog) {

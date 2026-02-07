@@ -358,3 +358,27 @@ public final class addy {
         if (keyword == null || keyword.isBlank()) {
             throw new IllegalArgumentException("addy: keyword blank");
         }
+        CampaignRecord camp = campaigns.get(campaignId);
+        if (camp == null) {
+            throw new IllegalArgumentException("addy: campaign not found " + campaignId);
+        }
+        if (camp.getKeywordCount() >= maxKeywordsPerCampaign) {
+            throw new IllegalStateException("addy: campaign keyword cap reached");
+        }
+        if (keywordSlots.size() >= KEYWORD_SLOT_CAP) {
+            throw new IllegalStateException("addy: global slot cap reached");
+        }
+        if (cpcNanos < bidFloorNanos) {
+            throw new IllegalArgumentException("addy: cpc below floor");
+        }
+        Long tierCap = tierCaps.get(tier);
+        if (tierCap != null && cpcNanos > tierCap) {
+            throw new IllegalArgumentException("addy: cpc above tier cap");
+        }
+        String hash = keywordHash(keyword);
+        if (registeredKeywordHashes.contains(hash)) {
+            throw new IllegalStateException("addy: keyword already registered");
+        }
+        long slotId = nextKeywordId.getAndIncrement();
+        KeywordSlotRecord slot = new KeywordSlotRecord(slotId, hash, campaignId, tier, cpcNanos,
+                Instant.now(), true);

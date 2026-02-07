@@ -526,3 +526,27 @@ public final class addy {
             case ALPHA -> ALPHA_ALLOWED_PHASES.contains(phase);
             case BETA -> BETA_ALLOWED_PHASES.contains(phase);
             case GAMMA -> GAMMA_ALLOWED_PHASES.contains(phase);
+            case DELTA -> DELTA_ALLOWED_PHASES.contains(phase);
+        };
+    }
+
+    // -------------------------------------------------------------------------
+    // Bulk slot lookup by campaign
+    // -------------------------------------------------------------------------
+
+    public List<KeywordSlotRecord> getSlotsForCampaign(long campaignId) {
+        List<KeywordSlotRecord> out = new ArrayList<>();
+        for (KeywordSlotRecord slot : keywordSlots.values()) {
+            if (slot.getCampaignId() == campaignId && slot.isActive()) {
+                out.add(slot);
+            }
+        }
+        return out;
+    }
+
+    public int countActiveSlotsForCampaign(long campaignId) {
+        int n = 0;
+        for (KeywordSlotRecord slot : keywordSlots.values()) {
+            if (slot.getCampaignId() == campaignId && slot.isActive()) n++;
+        }
+        return n;

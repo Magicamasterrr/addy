@@ -430,3 +430,27 @@ public final class addy {
 
     public List<AuditEntry> getAuditTail(int maxEntries) {
         synchronized (auditLog) {
+            int size = auditLog.size();
+            if (maxEntries <= 0 || size == 0) return List.of();
+            int from = Math.max(0, size - maxEntries);
+            return new ArrayList<>(auditLog.subList(from, size));
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Queries
+    // -------------------------------------------------------------------------
+
+    public KeywordSlotRecord getKeywordSlot(long slotId) {
+        return keywordSlots.get(slotId);
+    }
+
+    public CampaignRecord getCampaign(long campaignId) {
+        return campaigns.get(campaignId);
+    }
+
+    public int getKeywordSlotCount() {
+        return keywordSlots.size();
+    }
+
+    public int getCampaignCount() {

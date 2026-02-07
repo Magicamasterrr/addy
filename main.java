@@ -502,3 +502,27 @@ public final class addy {
         return BidTierKind.ULTRA;
     }
 
+    public boolean isCpcWithinTier(long cpcNanos, BidTierKind tier) {
+        Long cap = tierCaps.get(tier);
+        if (cap == null) return tier == BidTierKind.ZERO && cpcNanos == 0;
+        return cpcNanos >= bidFloorNanos && cpcNanos <= cap;
+    }
+
+    // -------------------------------------------------------------------------
+    // Zone eligibility (which zones allow which phases)
+    // -------------------------------------------------------------------------
+
+    public static final Set<CampaignPhase> ALPHA_ALLOWED_PHASES =
+            EnumSet.of(CampaignPhase.DRAFT, CampaignPhase.PENDING_REVIEW, CampaignPhase.LIVE, CampaignPhase.PAUSED, CampaignPhase.ARCHIVED);
+    public static final Set<CampaignPhase> BETA_ALLOWED_PHASES =
+            EnumSet.of(CampaignPhase.DRAFT, CampaignPhase.LIVE, CampaignPhase.PAUSED, CampaignPhase.ARCHIVED);
+    public static final Set<CampaignPhase> GAMMA_ALLOWED_PHASES =
+            EnumSet.of(CampaignPhase.DRAFT, CampaignPhase.PENDING_REVIEW, CampaignPhase.LIVE, CampaignPhase.ARCHIVED);
+    public static final Set<CampaignPhase> DELTA_ALLOWED_PHASES =
+            EnumSet.of(CampaignPhase.DRAFT, CampaignPhase.LIVE, CampaignPhase.ARCHIVED);
+
+    public boolean isPhaseAllowedInZone(CampaignPhase phase, ThrottleZone zone) {
+        return switch (zone) {
+            case ALPHA -> ALPHA_ALLOWED_PHASES.contains(phase);
+            case BETA -> BETA_ALLOWED_PHASES.contains(phase);
+            case GAMMA -> GAMMA_ALLOWED_PHASES.contains(phase);
